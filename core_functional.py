@@ -28,7 +28,7 @@ def get_core_functions():
             # [3] 按钮颜色 (可选参数，默认 secondary)
             "Color":    r"secondary",
             # [4] 按钮是否可见 (可选参数，默认 True，即可见)
-            "Visible": True,
+            "Visible": False,
             # [5] 是否在触发时清除历史 (可选参数，默认 False，即不处理之前的对话历史)
             "AutoClearHistory": False,
             # [6] 文本预处理 （可选参数，默认 None，举例：写个函数移除所有的换行符）
@@ -65,6 +65,7 @@ def get_core_functions():
                     （3）`|` 和 `"`之间不要存在空格
                     （4）根据情况选择flowchart LR（从左到右）或者flowchart TD（从上到下）
                 '''),
+            "Visible": False,
         },
 
 
@@ -86,12 +87,14 @@ def get_core_functions():
                         + "\n\n",
             "Suffix":   r"",
             "PreProcess": clear_line_break,    # 预处理：清除换行符
+            "Visible": False,
         },
 
 
         "中译英": {
             "Prefix":   r"Please translate following sentence to English:" + "\n\n",
             "Suffix":   r"",
+            "Visible": False,
         },
 
 
@@ -113,6 +116,7 @@ def get_core_functions():
                                 r"你需要翻译的文本如下："
                         ) + "\n\n",
             "Suffix":   r"",
+            "Visible": False,
         },
 
 
@@ -134,6 +138,7 @@ def get_core_functions():
         "解释代码": {
             "Prefix":   r"请解释以下代码：" + "\n```\n",
             "Suffix":   "\n```\n",
+            "Visible": False,
         },
 
 

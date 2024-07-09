@@ -1,17 +1,6 @@
 import os, json; os.environ['no_proxy'] = '*' # 避免代理网络产生意外污染
 
-help_menu_description = \
-"""Github源代码开源和更新[地址🚀](https://github.com/binary-husky/gpt_academic),
-感谢热情的[开发者们❤️](https://github.com/binary-husky/gpt_academic/graphs/contributors).
-</br></br>常见问题请查阅[项目Wiki](https://github.com/binary-husky/gpt_academic/wiki),
-如遇到Bug请前往[Bug反馈](https://github.com/binary-husky/gpt_academic/issues).
-</br></br>普通对话使用说明: 1. 输入问题; 2. 点击提交
-</br></br>基础功能区使用说明: 1. 输入文本; 2. 点击任意基础功能区按钮
-</br></br>函数插件区使用说明: 1. 输入路径/问题, 或者上传文件; 2. 点击任意函数插件区按钮
-</br></br>虚空终端使用说明: 点击虚空终端, 然后根据提示输入指令, 再次点击虚空终端
-</br></br>如何保存对话: 点击保存当前的对话按钮
-</br></br>如何语音对话: 请阅读Wiki
-</br></br>如何临时更换API_KEY: 在输入区输入临时API_KEY后提交（网页刷新后失效）"""
+help_menu_description = ""
 
 def enable_log(PATH_LOGGING):
     import logging
@@ -90,10 +79,7 @@ def main():
 
         cookies, web_cookie_cache = make_cookie_cache() # 定义 后端state（cookies）、前端（web_cookie_cache）两兄弟
         with gr_L1():
-            with gr_L2(scale=2, elem_id="gpt-chat"):
-                chatbot = gr.Chatbot(label=f"当前模型：{LLM_MODEL}", elem_id="gpt-chatbot")
-                if LAYOUT == "TOP-DOWN":  chatbot.style(height=CHATBOT_HEIGHT)
-                history, history_cache, history_cache_update = make_history_cache() # 定义 后端state（history）、前端（history_cache）、后端setter（history_cache_update）三兄弟
+            
             with gr_L2(scale=1, elem_id="gpt-panel"):
                 with gr.Accordion("输入区", open=True, elem_id="input-panel") as area_input_primary:
                     with gr.Row():
@@ -110,18 +96,18 @@ def main():
                     with gr.Row():
                         status = gr.Markdown(f"Tip: 按Enter提交, 按Shift+Enter换行。支持将文件直接粘贴到输入区。", elem_id="state-panel")
 
-                with gr.Accordion("基础功能区", open=True, elem_id="basic-panel") as area_basic_fn:
-                    with gr.Row():
-                        for k in range(NUM_CUSTOM_BASIC_BTN):
-                            customize_btn = gr.Button("自定义按钮" + str(k+1), visible=False, variant="secondary", info_str=f'基础功能区: 自定义按钮')
-                            customize_btn.style(size="sm")
-                            customize_btns.update({"自定义按钮" + str(k+1): customize_btn})
-                        for k in functional:
-                            if ("Visible" in functional[k]) and (not functional[k]["Visible"]): continue
-                            variant = functional[k]["Color"] if "Color" in functional[k] else "secondary"
-                            functional[k]["Button"] = gr.Button(k, variant=variant, info_str=f'基础功能区: {k}')
-                            functional[k]["Button"].style(size="sm")
-                            predefined_btns.update({k: functional[k]["Button"]})
+                # with gr.Accordion("基础功能区", open=False, elem_id="basic-panel") as area_basic_fn:
+                #     with gr.Row():
+                #         for k in range(NUM_CUSTOM_BASIC_BTN):
+                #             customize_btn = gr.Button("自定义按钮" + str(k+1), visible=False, variant="secondary", info_str=f'基础功能区: 自定义按钮')
+                #             customize_btn.style(size="sm")
+                #             customize_btns.update({"自定义按钮" + str(k+1): customize_btn})
+                #         for k in functional:
+                #             if ("Visible" in functional[k]) and (not functional[k]["Visible"]): continue
+                #             variant = functional[k]["Color"] if "Color" in functional[k] else "secondary"
+                #             functional[k]["Button"] = gr.Button(k, variant=variant, info_str=f'基础功能区: {k}')
+                #             functional[k]["Button"].style(size="sm")
+                #             predefined_btns.update({k: functional[k]["Button"]})
                 with gr.Accordion("函数插件区", open=True, elem_id="plugin-panel") as area_crazy_fn:
                     with gr.Row():
                         gr.Markdown("<small>提升用户阅读体验的插件合集 </small>")
@@ -153,6 +139,11 @@ def main():
                     with gr.Row():
                         with gr.Accordion("点击展开“文件下载区”。", open=True) as area_file_up:
                             file_upload = gr.Files(label="任何文件, 推荐上传压缩文件(zip, tar)", file_count="multiple", elem_id="elem_upload")
+                            
+            with gr_L2(scale=2, elem_id="gpt-chat"):
+                chatbot = gr.Chatbot(label=f"当前模型：{LLM_MODEL}", elem_id="gpt-chatbot")
+                if LAYOUT == "TOP-DOWN":  chatbot.style(height=CHATBOT_HEIGHT)
+                history, history_cache, history_cache_update = make_history_cache() # 定义 后端state（history）、前端（history_cache）、后端setter（history_cache_update）三兄弟
 
         from themes.gui_toolbar import define_gui_toolbar
         checkboxes, checkboxes_2, max_length_sl, theme_dropdown, system_prompt, file_upload_2, md_dropdown, top_p, temperature = \
@@ -174,7 +165,7 @@ def main():
             ret.update({plugin_advanced_arg: gr.update(visible=("插件参数区" in a))})
             if "浮动输入区" in a: ret.update({txt: gr.update(value="")})
             return ret
-        checkboxes.select(fn_area_visibility, [checkboxes], [area_basic_fn, area_crazy_fn, area_input_primary, area_input_secondary, txt, txt2, plugin_advanced_arg] )
+        checkboxes.select(fn_area_visibility, [checkboxes], [area_crazy_fn, area_input_primary, area_input_secondary, txt, txt2, plugin_advanced_arg] )
         checkboxes.select(None, [checkboxes], None, _js=js_code_show_or_hide)
 
         # 功能区显示开关与功能区的互动
