@@ -46,7 +46,7 @@ def main():
     from themes.theme import adjust_theme, advanced_css, theme_declaration, js_code_clear, js_code_reset, js_code_show_or_hide, js_code_show_or_hide_group2
     from themes.theme import js_code_for_css_changing, js_code_for_toggle_darkmode, js_code_for_persistent_cookie_init
     from themes.theme import load_dynamic_theme, to_cookie_str, from_cookie_str, assign_user_uuid
-    title_html = f"<h1 align=\"center\">GPT 学术优化 {get_current_version()}</h1>{theme_declaration}"
+    title_html = f"<h1 align=\"center\">GPT 读书笔记助手 {get_current_version()}</h1>{theme_declaration}"
 
     # 对话、日志记录
     enable_log(PATH_LOGGING)
@@ -83,7 +83,7 @@ def main():
     customize_btns = {}
     predefined_btns = {}
     from shared_utils.cookie_manager import make_cookie_cache, make_history_cache
-    with gr.Blocks(title="GPT 学术优化", theme=set_theme, analytics_enabled=False, css=advanced_css) as app_block:
+    with gr.Blocks(title="GPT 读书笔记助手", theme=set_theme, analytics_enabled=False, css=advanced_css) as app_block:
         gr.HTML(title_html)
         secret_css = gr.Textbox(visible=False, elem_id="secret_css")
         register_advanced_plugin_init_arr = ""
@@ -124,7 +124,7 @@ def main():
                             predefined_btns.update({k: functional[k]["Button"]})
                 with gr.Accordion("函数插件区", open=True, elem_id="plugin-panel") as area_crazy_fn:
                     with gr.Row():
-                        gr.Markdown("<small>插件可读取“输入区”文本/路径作为参数（上传文件自动修正路径）</small>")
+                        gr.Markdown("<small>提升用户阅读体验的插件合集 </small>")
                     with gr.Row(elem_id="input-plugin-group"):
                         plugin_group_sel = gr.Dropdown(choices=all_plugin_groups, label='', show_label=False, value=DEFAULT_FN_GROUPS,
                                                       multiselect=True, interactive=True, elem_classes='normal_mut_select').style(container=False)
@@ -137,7 +137,7 @@ def main():
                             plugin['Button'] = plugins[k]['Button'] = gr.Button(k, variant=variant,
                                 visible=visible, info_str=f'函数插件区: {info}').style(size="sm")
                     with gr.Row():
-                        with gr.Accordion("更多函数插件", open=True):
+                        with gr.Accordion("更多函数插件", open=False):
                             dropdown_fn_list = []
                             for k, plugin in plugins.items():
                                 if not match_group(plugin['Group'], DEFAULT_FN_GROUPS): continue
@@ -151,7 +151,7 @@ def main():
                             with gr.Row():
                                 switchy_bt = gr.Button(r"请先从插件列表中选择", variant="secondary", elem_id="elem_switchy_bt").style(size="sm")
                     with gr.Row():
-                        with gr.Accordion("点击展开“文件下载区”。", open=False) as area_file_up:
+                        with gr.Accordion("点击展开“文件下载区”。", open=True) as area_file_up:
                             file_upload = gr.Files(label="任何文件, 推荐上传压缩文件(zip, tar)", file_count="multiple", elem_id="elem_upload")
 
         from themes.gui_toolbar import define_gui_toolbar
